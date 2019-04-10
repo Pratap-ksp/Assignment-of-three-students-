@@ -1,0 +1,112 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<pthread.h>
+#include<unistd.h>
+
+
+
+pthread_mutex_t lok;
+
+void* teacher();
+void* StuPen();
+void* StuPaper();
+void* StuQPaper();
+
+void main()
+{
+    pthread_mutex_init(&lok, NULL);
+    pthread_t t1[4];
+
+
+  	pthread_create(&t1[0],NULL, teacher,NULL);
+  	pthread_create(&t1[1],NULL, StuPen,NULL);
+  	pthread_create(&t1[2],NULL, StuPaper,NULL);
+  	pthread_create(&t1[3],NULL, StuQPaper,NULL);
+
+  	pthread_join(t1[0],NULL);
+  	pthread_join(t1[1],NULL);
+  	pthread_join(t1[2],NULL);
+  	pthread_join(t1[3],NULL);
+
+
+}
+
+void* teacher()
+{
+	 pthread_mutex_lock(&lok);
+	int count=0;
+	while(count!=3)
+  	{
+
+
+  		    int stud_no = rand()%3; //Selecting Student at random
+
+    		switch(stud_no)
+    		{
+      			case 0 :	count++;
+				  			printf("\n Teacher Kept Paper and Question paper on the table \n");
+      						pthread_mutex_unlock(&lok);
+                			StuPen();
+                			pthread_mutex_lock(&lok);
+						   	break;
+
+      			case 1 :    count++;
+				  			printf("\n Teacher Kept Pen and Question paper on the table \n");
+      						pthread_mutex_unlock(&lok);
+                			StuPaper();
+                			pthread_mutex_lock(&lok);
+					        break;
+
+      			case 2 :  	count++;
+				  			printf("\n Teacher Kept Pen and Paper on the table \n");
+      						pthread_mutex_unlock(&lok);
+                			StuQPaper();
+                			pthread_mutex_lock(&lok);
+                			break;
+
+      			default:  	break;
+
+    		}
+
+
+  	}
+  	pthread_mutex_unlock(&lok);
+
+}
+
+void* StuPen()
+{
+
+	pthread_mutex_lock(&lok);
+
+
+    		printf("\n Paper and Question Paper are placed on the table for Assignment \n");
+
+    		printf(" \n Student with Pen completed his Assignment \n Assigned by the Teacher \n");
+
+
+}
+
+void* StuPaper()
+{
+	pthread_mutex_lock(&lok);
+
+
+    		printf("\n Pen and Question Paper are placed on the table for Assignment \n");
+
+    		printf("\n Student with Paper completed his Assignment \n Assigned by the Teacher \n");
+
+
+
+}
+
+void* StuQPaper()
+{
+	pthread_mutex_lock(&lok);
+
+    		printf("\n Pen and Paper are placed on the table for Assignment \n");
+
+    		printf("\n Student with Question Paper completed his Assignment \n Assigned by the Teacher \n");
+
+
+}
